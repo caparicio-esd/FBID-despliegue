@@ -1,0 +1,18 @@
+FROM python:3.8-buster
+
+LABEL title="Flask Kafka connector for FBID - MUIRST 2324"
+LABEL author="Carlos Aparicio"
+LABEL email="ce.aparicio@alumnos.upm.es"
+LABEL version="0.1"
+
+ENV APP_ROOT=app
+ENV SERVER_PORT=5003
+
+RUN mkdir ${APP_ROOT}
+COPY ./requirements.txt /${APP_ROOT}
+RUN pip install --upgrade pip
+RUN pip install -r /${APP_ROOT}/requirements.txt
+COPY ./resources/web_kafka /${APP_ROOT}/server
+
+EXPOSE ${SERVER_PORT} 9092
+CMD python3 "${APP_ROOT}/server/predict_flask.py"

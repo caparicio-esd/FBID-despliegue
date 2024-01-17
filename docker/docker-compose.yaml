@@ -1,0 +1,203 @@
+version: "3.7"
+services:
+  #
+  flask-mongo:
+    build:
+      dockerfile: docker/Dockerfile.flask.mongo
+      context: ./../.
+    container_name: flask-mongo
+    hostname: flask-mongo    
+    ports:
+      - "5001:5001"
+    networks:
+      - fbid
+    restart: on-failure
+    env_file:
+      - ./.env
+    depends_on:
+      - mongo
+    
+  #
+  flask-cassandra:
+    build:
+      dockerfile: docker/Dockerfile.flask.cassandra
+      context: ./../.
+    container_name: flask-cassandra
+    hostname: flask-cassandra    
+    ports:
+      - "5002:5002"
+    networks:
+      - fbid
+    restart: on-failure
+    env_file:
+      - ./.env
+    depends_on:
+      - cassandra
+
+  # <---- revisar porque no tira... la vuelta, el resto funciona reok...
+  flask-kafka:
+    build:
+      dockerfile: docker/Dockerfile.flask.kafka
+      context: ./../.
+    container_name: flask-kafka
+    hostname: flask-kafka
+    ports:
+      - "5003:5003"
+    networks:
+      - fbid
+    restart: on-failure
+    env_file:
+      - ./.env
+    depends_on:
+      - kafka
+
+  #
+  cassandra:
+    image: cassandra:4.0.11
+    container_name: cassandra
+    hostname: cassandra
+    ports:
+      - "9042:9042"
+    networks:
+      - fbid
+    restart: on-failure
+    env_file:
+      - ./.env
+    volumes:
+      - /var/lib/cassandra
+  
+  #
+  cassandra-populate:
+    image: cassandra:4.0.11
+    container_name: cassandra-populate
+    entrypoint: /init_cassandra.sh
+    networks:
+      - fbid
+    restart: on-failure
+    depends_on:
+      - cassandra
+      - flask-cassandra
+    env_file:
+      - ./.env
+    volumes:
+      - ./init_cassandra.sh:/init_cassandra.sh
+
+
+  #
+  mongo:
+    image: mongo:7.0.4
+    container_name: mongo
+    hostname: mongo
+    ports:
+      - "27017:27017"
+    networks:
+      - fbid
+    restart: on-failure
+    env_file:
+      - ./.env
+
+
+  #
+  mongo-populate:
+    image: mongo:7.0.4
+    container_name: mongo-populate
+    entrypoint: /init_mongo.sh
+    networks:
+      - fbid
+    restart: on-failure
+    env_file:
+      - ./.env
+    depends_on:
+      - mongo
+    volumes:
+      - ./init_mongo.sh:/init_mongo.sh
+      - ./../data/origin_dest_distances.jsonl:/data/origin_dest_distances.jsonl
+
+  # 
+  zookeeper:
+    image: zookeeper:3.4
+    container_name: zookeeper
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+    networks:
+      - fbid
+    restart: on-failure
+    env_file:
+      - ./.env
+
+  #
+  kafka:
+    image: bitnami/kafka:3.4
+    container_name: kafka
+    hostname: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+    networks:
+      - fbid
+    restart: on-failure
+    env_file:
+      - ./.env
+
+
+  # 
+  kafka-populate:
+    image: bitnami/kafka:3.4
+    container_name: kafka-populate
+    entrypoint: /init_kafka.sh
+    networks:
+      - fbid
+    depends_on:
+      - kafka
+    env_file:
+      - ./.env
+    volumes:
+      - ./init_kafka.sh:/init_kafka.sh
+    restart: on-failure
+
+
+  #
+  spark-master:
+    image: bitnami/spark:3.3.4
+    command: ./sbin/start-master.sh
+    container_name: spark-master
+    hostname: spark-master
+    ports:
+      - "9090:8080"
+      - "7077:7077"
+    networks:
+      - fbid
+    restart: on-failure
+    env_file:
+      - ./.env
+    depends_on:
+      - cassandra
+      - kafka
+      - mongo
+    volumes:
+      - ./../models:/models
+
+  #
+  spark-worker:
+    image: bitnami/spark:3.3.4
+    command: ./sbin/start-worker.sh spark://spark-master:7077
+    container_name: spark-worker
+    hostname: spark-worker
+    depends_on:
+      - spark-master
+    ports:
+      - "9091:8081"
+    networks:
+      - fbid
+    restart: on-failure
+    env_file:
+      - ./.env
+    volumes:
+      - ./../models:/models
+
+
+
+networks:
+  fbid:
