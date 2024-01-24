@@ -30,41 +30,41 @@ MONGO_SHELL_MIRROR=https://downloads.mongodb.com/compass/mongosh-${MONGOSH_VERSI
 SPARK_MIRROR=https://dlcdn.apache.org/spark/spark-${SPARK_VERSION}/spark-${SPARK_VERSION}-bin-hadoop3-scala${SCALA_VERSION}.tgz
 CASSANDRA_MIRROR=https://dlcdn.apache.org/cassandra/${CASSANDRA_VERSION}/apache-cassandra-${CASSANDRA_VERSION}-bin.tar.gz
 
-# # ZOOKEEPER
-# curl -o ./lib/zookeeper $ZOOKEEPER_MIRROR
-# tar -xzvf ./lib/zookeeper ./lib/
-# rm ./lib/zookeeper
+# ZOOKEEPER
+curl -o ./lib/zookeeper $ZOOKEEPER_MIRROR
+tar -xzvf ./lib/zookeeper ./lib/
+rm ./lib/zookeeper
 
-# # KAFKA
-# curl -o ./lib/kafka $KAFKA_MIRROR
-# tar -xzvf ./lib/kafka ./lib/
-# rm ./lib/kafka
+# KAFKA
+curl -o ./lib/kafka $KAFKA_MIRROR
+tar -xzvf ./lib/kafka ./lib/
+rm ./lib/kafka
 
-# # MONGO
-# curl -o ./lib/mongo $MONGO_MIRROR
-# tar -xzvf ./lib/mongo ./lib/
-# rm ./lib/mongo
+# MONGO
+curl -o ./lib/mongo $MONGO_MIRROR
+tar -xzvf ./lib/mongo ./lib/
+rm ./lib/mongo
 
-# # MONGO_DBT
-# curl -o ./lib/mongodbt $MONGO_DBT_MIRROR
-# tar -xzvf ./lib/mongodbt ./lib/
-# rm ./lib/mongodbt
+# MONGO_DBT
+curl -o ./lib/mongodbt $MONGO_DBT_MIRROR
+tar -xzvf ./lib/mongodbt ./lib/
+rm ./lib/mongodbt
 
-# # MONGO_SHELL
-# curl -o ./lib/mongosh $MONGO_SHELL_MIRROR
-# tar -xzvf ./lib/mongosh ./lib/
-# rm ./lib/mongosh
+# MONGO_SHELL
+curl -o ./lib/mongosh $MONGO_SHELL_MIRROR
+tar -xzvf ./lib/mongosh ./lib/
+rm ./lib/mongosh
 
-# # SPARK
-# curl -o ./lib/spark $SPARK_MIRROR
-# tar -xzvf ./lib/spark -C ./lib/
-# rm ./lib/spark
+# SPARK
+curl -o ./lib/spark $SPARK_MIRROR
+tar -xzvf ./lib/spark -C ./lib/
+rm ./lib/spark
 
 
-# # CASSANDRA
-# curl -o ./lib/cassandra $CASSANDRA_MIRROR
-# tar -xzvf ./lib/cassandra -C ./lib/
-# rm ./lib/cassandra
+# CASSANDRA
+curl -o ./lib/cassandra $CASSANDRA_MIRROR
+tar -xzvf ./lib/cassandra -C ./lib/
+rm ./lib/cassandra
 
 # INSTALLING STUFF AND VENV
 deactivate
