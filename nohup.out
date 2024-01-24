@@ -1,1 +1,0 @@
-USAGE: ./lib/kafka_2.13-3.4.0/bin/kafka-server-start.sh [-daemon] server.properties [--override property=value]*
