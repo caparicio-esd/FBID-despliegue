@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zookeeper
+  labels:
+    app: zookeeper
+spec:
+  selector:
+    matchLabels:
+      app: zookeeper
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      containers:
+      - name: zookeeper
+        image: zookeeper:3.4
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 2181
+        env:
+        - name: CASSANDRA_PORT
+          value: "9042"
+        - name: CASSANDRA_HOST
+          value: "cassandra"
+        - name: CASSANDRA_KEYSPACE
+          value: "agile_data_science"
+        - name: CASSANDRA_TABLE
+          value: "flight_delay_classification_response"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+spec:
+  selector:
+    app: zookeeper
+  ports:
+  - name: zookeeper
+    port: 2181
+    targetPort: 2181
+

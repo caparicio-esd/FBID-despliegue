@@ -1,0 +1,18 @@
+FROM bitnami/kafka:3.4
+
+
+ENV KAFKA_BIN /opt/bitnami/kafka/bin
+
+RUN ${KAFKA_BIN}/kafka-topics.sh \
+    --create \
+    --bootstrap-server kafka:9092 \
+    --replication-factor 1 \
+    --partitions 1 \
+    --topic flight_delay_classification_request
+
+RUN ${KAFKA_BIN}/kafka-topics.sh \
+    --create \
+    --bootstrap-server kafka:9092 \
+    --replication-factor 1 \
+    --partitions 1 \
+    --topic flight_delay_classification_response

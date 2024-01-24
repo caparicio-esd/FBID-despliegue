@@ -1,0 +1,4 @@
+FROM cassandra:4.0.11
+
+WORKDIR /
+COPY ./init_cassandra.sh /init_cassandra.sh
