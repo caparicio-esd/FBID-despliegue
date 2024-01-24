@@ -42,7 +42,7 @@ object MakePredictionCassandra {
      */
     println(isDocker)
     val base_path=
-      if (!isDocker) "/Users/apabook/Desktop/fbid/01_practica_fbid_standalone"
+      if (!isDocker) "/Users/apabook/Desktop/fbid"
       else ""
     val vectorAssemblerPath = s"$base_path/models/numeric_vector_assembler.bin"
     val randomForestModelPath =

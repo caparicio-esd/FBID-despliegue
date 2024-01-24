@@ -1,12 +1,11 @@
-from os import environ
+import time
 import joblib
 import uuid
-from kafka import KafkaConsumer, KafkaProducer
+from kafka import KafkaConsumer, KafkaProducer, TopicPartition
 import datetime
 import iso8601
 import json
 from pyelasticsearch import ElasticSearch
-from kafka import KafkaProducer
 import sys
 import os
 import re
@@ -51,7 +50,6 @@ kafka_bootstrap_servers = [
 # <------ este es el puto problema....
 kafkaProducer = KafkaProducer(
     bootstrap_servers=kafka_bootstrap_servers, api_version=(0, 10))
-PREDICTION_TOPIC = 'flight_delay_classification_request'
 # Chapter 5 controller: Fetch a flight and display it
 
 
@@ -572,22 +570,28 @@ def flight_delays_page_kafka():
 
 # predicción...
 
-# <----- la preducción la hace... el error es de esta funcion del kafka counsumer...
+# Configure the Kafka consumer
 @app.route("/flights/delays/predict/classify_realtime/response/<unique_id>")
 def classify_flight_delays_realtime_response(unique_id):
     """Serves predictions to polling requestors"""
     kafka_message = None
-    kafkaConsumer = KafkaConsumer(RESPONSE_TOPIC,
-                                  bootstrap_servers=kafka_bootstrap_servers,
+    kafkaConsumer = KafkaConsumer(bootstrap_servers=kafka_bootstrap_servers,
                                   api_version=(0, 10),
                                   auto_offset_reset="latest")
+    tp = TopicPartition("flight_delay_classification_response", 0)
+    kafkaConsumer.assign([tp])
+    kafkaConsumer.seek_to_end()
+    
     for message in kafkaConsumer:
         kafka_message = json.loads(message.value.decode("utf-8"))
+        print(kafka_message)
         kafkaConsumer.close()
+        break
 
     response = {"status": "OK", "prediction": kafka_message}
     return json_util.dumps(response)
 
+        
 
 def shutdown_server():
     func = request.environ.get('werkzeug.server.shutdown')

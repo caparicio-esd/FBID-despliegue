@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Ensure launching cwd
-CWD_FBID1=/Users/apabook/Desktop/fbid/01_practica_fbid_standalone
+CWD_FBID1=/Users/apabook/Desktop/fbid
 if [ "$CWD_FBID1" != "$PWD" ]; then
     echo "Script must be runned in a specified directory"
     exit 1
@@ -61,15 +61,19 @@ CASSANDRA_MIRROR=https://dlcdn.apache.org/cassandra/${CASSANDRA_VERSION}/apache-
 # rm ./lib/spark
 
 
-# CASSANDRA
-curl -o ./lib/cassandra $CASSANDRA_MIRROR
-tar -xzvf ./lib/cassandra -C ./lib/
-rm ./lib/cassandra
+# # CASSANDRA
+# curl -o ./lib/cassandra $CASSANDRA_MIRROR
+# tar -xzvf ./lib/cassandra -C ./lib/
+# rm ./lib/cassandra
 
 # INSTALLING STUFF AND VENV
 deactivate
-rm -rf ./env
+rm -rf env
 python3 -m venv env
+sleep 5
 source ./env/bin/activate
+sleep 5
+which python
+which pip
 pip install --upgrade pip
 pip install -r ./requirements.txt

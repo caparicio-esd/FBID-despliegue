@@ -198,6 +198,20 @@ services:
       - ./../models:/models
 
 
+  # # (first compile jar and put in jar folder)
+  # spark-submit:
+  #   image: bitnami/spark:3.3.4
+  #   container_name: spark-submit
+  #   command: sleep 20 && /submit_spark_job.sh
+  #   env_file: 
+  #     - ./.env
+  #   volumes:
+  #     - ./jars:/jars
+  #     - ./submit_spark_job.sh:/submit_spark_job.sh
+  #     - ./../models:/models
+  #   networks:
+  #     - fbid
+
 
 networks:
   fbid:
