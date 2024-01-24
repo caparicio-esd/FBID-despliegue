@@ -183,7 +183,7 @@ object MakePredictionCassandra {
       .writeStream
       .format("kafka")
       .option("kafka.bootstrap.servers", s"$kafkaHost:$kafkaPort")
-      .option("topic", "flight_delay_classification_response")
+      .option("topic", kafkaTopicSink)
       .option("checkpointLocation", "checkpoints/kafka")
       .outputMode("append")
       .start()
