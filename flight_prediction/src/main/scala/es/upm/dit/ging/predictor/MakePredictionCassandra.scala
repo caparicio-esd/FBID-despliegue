@@ -152,7 +152,7 @@ object MakePredictionCassandra {
       .format("mongodb")
       .option("spark.mongodb.connection.uri", s"mongodb://$mongoHost:$mongoPort")
       .option("spark.mongodb.database", mongoDb)
-      .option("checkpointLocation", "/tmp/mongo")
+      .option("checkpointLocation", "checkpoints/mongo")
       .option("spark.mongodb.collection", mongoCollection)
       .outputMode("append")
       .start()
@@ -167,7 +167,7 @@ object MakePredictionCassandra {
       .option("spark.cassandra.connection.port", cassandraPort)
       .option("keyspace", cassandraKeySpace)
       .option("table", cassandraTable)
-      .option("checkpointLocation", "/tmp/cassandra")
+      .option("checkpointLocation", "/checkpoints/cassandra")
       .outputMode("append")
       .start()
 
@@ -183,8 +183,8 @@ object MakePredictionCassandra {
       .writeStream
       .format("kafka")
       .option("kafka.bootstrap.servers", s"$kafkaHost:$kafkaPort")
-      .option("topic", kafkaTopicSink)
-      .option("checkpointLocation", "/tmp/kafka")
+      .option("topic", "flight_delay_classification_response")
+      .option("checkpointLocation", "checkpoints/kafka")
       .outputMode("append")
       .start()
 
